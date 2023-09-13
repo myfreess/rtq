@@ -44,7 +44,7 @@ func next[T](self:State[T]) -> State[T] {
 func step[T](front:List[T], n:Int, state:State[T], rear:List[T], m:Int) -> RTQ[T] {
   // 状态机执行一步
   fn queue(s:State[T]) -> RTQ[T] {
-    match state {
+    match s {
       Done(f) => {front:f, front_length:n, state:Empty, rear:rear, rear_length:m}
       s       => {front:front, front_length:n, state:s, rear:rear, rear_length:m}
     }
@@ -70,6 +70,6 @@ pub func push[T](self:RTQ[T], x:T) -> RTQ[T] {
 pub func pop[T](self:RTQ[T]) -> RTQ[T]{
   match self {
     {front:Cons(_, f), front_length:n, state:s, rear:r, rear_length:m} => balance(f, n - 1, s.abort(), r, m)
-    
+    _ => abort("wrong argument")
   }
 }
