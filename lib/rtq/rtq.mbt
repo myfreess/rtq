@@ -13,6 +13,8 @@ pub struct RTQ[T] {
   rear_length:Int
 }
 
+// pub func to_string[T:Show](self:RTQ[T])
+
 func abort[T](self:State[T]) -> State[T] {
   // 计数器减一
   // 此方法只被pop调用
@@ -33,7 +35,7 @@ func abort[T](self:State[T]) -> State[T] {
 
 func next[T](self:State[T]) -> State[T] {
   match self {
-    Reverse(n, accf, Cons(x, front), accr, Cons(y, rear)) => Reverse(n, Cons(x, accf), front, Cons(y, accr), rear)
+    Reverse(n, accf, Cons(x, front), accr, Cons(y, rear)) => Reverse(n+1, Cons(x, accf), front, Cons(y, accr), rear)
     Reverse(n, accf, Nil, accr, Cons(y, Nil)) => next(Concat(n, Cons(y, accr), accf))
     Concat(0, acc, _) => Done(acc)
     Concat(n, acc, Cons(x, front)) => Concat(n-1, Cons(x, acc), front)
@@ -67,9 +69,29 @@ pub func push[T](self:RTQ[T], x:T) -> RTQ[T] {
   }
 }
 
-pub func pop[T](self:RTQ[T]) -> RTQ[T]{
+pub func pop[T](self:RTQ[T]) -> Option[RTQ[T]]{
   match self {
-    {front:Cons(_, f), front_length:n, state:s, rear:r, rear_length:m} => balance(f, n - 1, s.abort(), r, m)
-    _ => abort("wrong argument")
+    {front:Cons(_, f), front_length:n, state:s, rear:r, rear_length:m} => Some(balance(f, n - 1, s.abort(), r, m))
+    _ => None
   }
+}
+
+pub func peek[T](self:RTQ[T]) -> Option[T] {
+  match self.front {
+    Nil => None 
+    // 前置条件保证只要不是没push元素,front一定不为Nil
+    Cons(x, _) => Some(x)
+  }
+}
+
+// 从示例复制的
+func length[T](self: List[T]) -> Int {
+  match self {
+    Nil => 0
+    Cons(_, xs) => 1 + xs.length()
+  }
+}
+
+pub func from_list[T](f:List[T]) -> RTQ[T] {
+  {front:f, front_length:f.length(), state:Empty, rear:Nil, rear_length:0}
 }
