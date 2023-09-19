@@ -1,5 +1,32 @@
 #### 双列表队列的实时版本
 
+```
+enum State[T] {
+  Empty
+  Reverse(Int, List[T], List[T], List[T], List[T]) // front_length, acc front, front, acc rear, rear
+  Concat(Int, List[T], List[T]) // front_length, acc, front
+  Done(List[T])
+}
+
+struct RTQ[T] {
+  front:List[T]
+  front_length:Int
+  state:State[T]
+  rear:List[T]
+  rear_length:Int
+}
+
+fn push[T](self:RTQ[T], x:T) -> RTQ[T]
+
+fn pop[T](self:RTQ[T]) -> Option[RTQ[T]]
+
+fn peek[T](self:RTQ[T]) -> Option[T]
+
+fn from_list[T](f:List[T]) -> RTQ[T]
+```
+
+#### 实时性的实现方法
+
 传统的双列表"马蹄形"队列是这样的
 
 ```
