@@ -8,7 +8,7 @@ func unwrap[T](self:Option[T]) -> T {
 
 func init {
   let q = @rtq.from_list(Nil)
-  let q1 = q.push(1).push(4).push(0).push(7)
+  let q1 = q.push(1).push(4).push(0).push(7).pop().unwrap().pop().unwrap()
   
   match q1.peek() {
     None => println("wrong")
